@@ -114,7 +114,7 @@ def run():
 		# initialize the current status along with our list of bounding
 		# box rectangles returned by either (1) our object detector or
 		# (2) the correlation trackers
-		status = "Waiting"
+		status = "Attente"
 		rects = []
 
 		# check to see if we should run a more computationally expensive
@@ -190,7 +190,7 @@ def run():
 		# object crosses this line we will determine whether they were
 		# moving 'up' or 'down'
 		cv2.line(frame, (0, H // 2), (W, H // 2), (0, 0, 0), 3)
-		cv2.putText(frame, "-Prediction border - Entrance-", (10, H - ((i * 20) + 200)),
+		cv2.putText(frame, "- Ligne de detection -", (10, H - ((i * 20) + 200)),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
 
 		# use the centroid tracker to associate the (1) old object
@@ -241,7 +241,7 @@ def run():
 						#print("Total people inside:", x)
 						# if the people limit exceeds over threshold, send an email alert
 						if sum(x) >= config.Threshold:
-							cv2.putText(frame, "-ALERT: People limit exceeded-", (10, frame.shape[0] - 80),
+							cv2.putText(frame, "-ALERTE: Limite de personnes atteinte-", (10, frame.shape[0] - 80),
 								cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 2)
 							if config.ALERT:
 								print("[INFO] Sending email alert..")
@@ -263,13 +263,13 @@ def run():
 
 		# construct a tuple of information we will be displaying on the
 		info = [
-		("Exit", totalUp),
-		("Enter", totalDown),
+		("Sortie", totalUp),
+		("Entree", totalDown),
 		("Status", status),
 		]
 
 		info2 = [
-		("Total people inside", x),
+		("Personnes", x),
 		]
 
                 # Display the output
@@ -287,14 +287,14 @@ def run():
 			d = [datetimee, empty1, empty, x]
 			export_data = zip_longest(*d, fillvalue = '')
 
-			with open('Log.csv', 'w', newline='') as myfile:
+			with open('Log2.csv', 'w', newline='') as myfile:
 				wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-				wr.writerow(("End Time", "In", "Out", "Total Inside"))
+				wr.writerow(("Stop", "Entree", "Sortie", "Total dans magasin"))
 				wr.writerows(export_data)
 
 
 		# show the output frame
-		cv2.imshow("Real-Time Monitoring/Analysis Window", frame)
+		cv2.imshow("Comptage Personnes Magasin", frame)
 		key = cv2.waitKey(1) & 0xFF
 
 		# if the `q` key was pressed, break from the loop
